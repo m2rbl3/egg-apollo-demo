@@ -23,10 +23,11 @@
     "node": ">=10.0.0"
   },
   "scripts": {
+    "tt": "node ./test.js && node ./test2.js",
     "start": "egg-scripts start --daemon --title=egg-server-demo",
     "stop": "egg-scripts stop --title=egg-server-demo",
     "dev": "egg-bin dev",
-    "debug": "egg-bin debug",
+    "debug": "egg-bin debug --proxy=45145",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",

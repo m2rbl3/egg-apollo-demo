@@ -1,35 +1,41 @@
-  
+
 'use strict';
 
-const apollo = require('node-apollo');
-const path = require('path');
-
 module.exports = app => {
-  const schedule = Object.assign({
-    interval: '1m',
+  const schedule = {
+    interval: '5s',
     type: 'worker',
-    disable: true
-  }, app.config.apollo)
+    // disable: true,
+  };
 
   return {
     schedule,
     async task(ctx) {
-      const apolloConfig = require(path.join(app.config.baseDir, 'config/apollo.js'));
-
-      const result = await apollo.remoteConfigServiceSikpCache(apolloConfig);
-      if (result && result.status === 304) {
-        app.coreLogger.info(`[ apollo ] - 暂无更新`);
-      } else {
-        apollo.createEnvFile(result);
-        apollo.setEnv();
-
-        const {
-          appInfo
-        } = app.config;
-        const updateConfig = require(path.join(app.config.baseDir, 'config/config.default.js'))(appInfo);
-        Object.assign(app.config, updateConfig);
-        app.coreLogger.info(`[ apollo ] - 更新完成`);
-      }
+      app.apiClient.publish({
+        key: 'test',
+      });
     },
   };
 };
+
+const Subscription = require('egg').Subscription;
+
+class UpdateCache extends Subscription {
+  // 通过 schedule 属性来设置定时任务的执行间隔等配置
+  static get schedule() {
+    return {
+      interval: '5s',
+      type: 'worker',
+    };
+  }
+
+  // subscribe 是真正定时任务执行时被运行的函数
+  async subscribe() {
+    console.log(this.app.apiClient.publish);
+    this.app.apiClient.publish({
+      key: 'test',
+    });
+  }
+}
+
+module.exports = UpdateCache;

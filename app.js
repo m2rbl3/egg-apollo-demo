@@ -9,9 +9,10 @@ module.exports = class AppBootHook {
     }
 
     configWillLoad() {
+
     }
 
     configDidLoad() {
-        
+
     }
 };
