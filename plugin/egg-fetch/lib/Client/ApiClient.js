@@ -1,5 +1,3 @@
-'use strict';
-
 const APIClientBase = require('cluster-client').APIClientBase;
 const RegistryClient = require('./RegistryClient');
 
@@ -10,18 +8,22 @@ class APIClient extends APIClientBase {
   }
 
   // 用于设置 cluster-client 相关参数，等同于 cluster 方法的第二个参数
-  // get clusterOptions() {
-  //   return {
-  //     responseTimeout: 120 * 1000,
-  //   };
-  // }
-
-  subscribe(...args) {
-    return this._client.subscribe(...args);
+  get clusterOptions() {
+    return {
+      responseTimeout: 120 * 1000,
+    };
   }
 
-  publish(...args) {
-    return this._client.publish(...args);
+  subscribe(reg, listener) {
+    this._client.subscribe(reg, listener);
+  }
+
+  publish(reg) {
+    this._client.publish(reg);
+  }
+
+  get(key) {
+    return this._cache[key];
   }
 }
 
